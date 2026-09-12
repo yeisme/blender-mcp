@@ -1,0 +1,84 @@
+{
+  "schema": "blender-mcp.tool-classification.v1",
+  "levels": [
+    "read",
+    "write",
+    "generate",
+    "exec"
+  ],
+  "nonExportableLevels": [
+    "generate",
+    "exec"
+  ],
+  "gatewayMaxPublicTools": 20,
+  "defaultExportTools": [
+    "download_polyhaven_asset",
+    "get_addon_status",
+    "get_hunyuan3d_status",
+    "get_hyper3d_status",
+    "get_object_info",
+    "get_polyhaven_categories",
+    "get_polyhaven_status",
+    "get_polypizza_status",
+    "get_scene_info",
+    "get_sketchfab_model_preview",
+    "get_sketchfab_status",
+    "get_viewport_screenshot",
+    "poll_hunyuan_job_status",
+    "poll_rodin_job_status",
+    "search_polyhaven_assets",
+    "search_polypizza_models",
+    "search_sketchfab_models",
+    "set_texture"
+  ],
+  "providerCredentialEnvVars": {
+    "hyper3d": "BLENDERMCP_HYPER3D_API_KEY",
+    "sketchfab": "BLENDERMCP_SKETCHFAB_API_KEY",
+    "polypizza": "BLENDERMCP_POLYPIZZA_API_KEY"
+  },
+  "tools": {
+    "read": [
+      "get_addon_status",
+      "get_hunyuan3d_status",
+      "get_hyper3d_status",
+      "get_object_info",
+      "get_polyhaven_categories",
+      "get_polyhaven_status",
+      "get_polypizza_status",
+      "get_scene_info",
+      "get_sketchfab_model_preview",
+      "get_sketchfab_status",
+      "get_viewport_screenshot",
+      "poll_hunyuan_job_status",
+      "poll_rodin_job_status",
+      "search_polyhaven_assets",
+      "search_polypizza_models",
+      "search_sketchfab_models"
+    ],
+    "write": [
+      "disable_telemetry",
+      "download_polyhaven_asset",
+      "download_polypizza_model",
+      "download_sketchfab_model",
+      "import_generated_asset",
+      "import_generated_asset_hunyuan",
+      "record_trajectory_feedback",
+      "set_texture"
+    ],
+    "generate": [
+      "generate_hunyuan3d_model",
+      "generate_hyper3d_model_via_images",
+      "generate_hyper3d_model_via_text"
+    ],
+    "exec": [
+      "execute_blender_code"
+    ]
+  },
+  "counts": {
+    "total": 28,
+    "read": 16,
+    "write": 8,
+    "generate": 3,
+    "exec": 1
+  }
+}

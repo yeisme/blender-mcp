@@ -79,12 +79,14 @@ servers:
 
 `mcp-gateway diagnose blender`（后端诊断）→ `mcp-gateway doctor`（客户端就绪）→ `mcp-gateway tools`（工具面核对，比对分级表）。DSH 侧 `ui-mcp-inspector` 自动可见会话内 blender 工具活动。
 
-## 工具分级（上游 27 个工具）
+## 工具分级（上游 28 个工具；server 实测枚举，2026-09-12）
+
+设计初稿按 27 个工具统计，落地枚举发现 `get_hunyuan3d_status` 漏计，补入 read 级，分级表以 `src/blender_mcp/tool_classification.py` 与校验脚本为准。
 
 | 级别 | 工具 | Gateway 默认 |
 | --- | --- | --- |
-| read | `get_addon_status`、`get_scene_info`、`get_object_info`、`get_viewport_screenshot`、`get_polyhaven_categories`、`get_polyhaven_status`、`get_hyper3d_status`、`get_sketchfab_status`、`get_polypizza_status`、`search_polyhaven_assets`、`search_sketchfab_models`、`get_sketchfab_model_preview`、`search_polypizza_models`、`poll_rodin_job_status`、`poll_hunyuan_job_status` | 暴露 |
-| write | `set_texture`、`download_polyhaven_asset`、`download_sketchfab_model`、`download_polypizza_model`、`import_generated_asset`、`import_generated_asset_hunyuan`、`record_trajectory_feedback`、`disable_telemetry` | 暴露，写操作记 receipt |
+| read | `get_addon_status`、`get_scene_info`、`get_object_info`、`get_viewport_screenshot`、`get_polyhaven_categories`、`get_polyhaven_status`、`get_hyper3d_status`、`get_hunyuan3d_status`、`get_sketchfab_status`、`get_polypizza_status`、`search_polyhaven_assets`、`search_sketchfab_models`、`get_sketchfab_model_preview`、`search_polypizza_models`、`poll_rodin_job_status`、`poll_hunyuan_job_status` | 暴露 |
+| write | `set_texture`、`download_polyhaven_asset`、`download_sketchfab_model`、`download_polypizza_model`、`import_generated_asset`、`import_generated_asset_hunyuan`、`record_trajectory_feedback`、`disable_telemetry` | 暴露，写操作记 receipt（默认 profile 含 curated 2 个，受 Gateway 20 工具上限约束） |
 | generate | `generate_hyper3d_model_via_text`、`generate_hyper3d_model_via_images`、`generate_hunyuan3d_model` | 默认不暴露；启用需审批 + 用户凭据 |
 | exec | `execute_blender_code` | 永不进 export profile；仅本地直连 + 显式授权 |
 
