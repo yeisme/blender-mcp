@@ -42,3 +42,14 @@
 #### Scenario: 证据与日志脱敏
 - **WHEN** 产生集成证据或运行日志
 - **THEN** 不含凭据、token、绝对用户路径或 raw provider payload
+
+### Requirement: 对接用户旅程与状态可见性
+系统 SHALL 提供脚本化的 first-run 对接旅程（安装核对、配置片段生成、validate、serve、client doctor/smoke）与五态连接状态模型（not_configured/server_unreachable/addon_disconnected/ready/degraded），每态给用户可见的下一步恢复动作。
+
+#### Scenario: 每态可恢复
+- **WHEN** 连接处于任意非 ready 状态
+- **THEN** 用户可见原因与唯一明确的恢复动作；只禁相关 mutation，不出现死按钮
+
+#### Scenario: generate 首次使用费用提示
+- **WHEN** generate 级工具首次被启用
+- **THEN** 用户看到「将调用外部 provider 并产生费用」的显式说明，确认且凭据就绪后工具才出现；审批文案不含凭据

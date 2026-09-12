@@ -25,6 +25,60 @@ flowchart LR
   TPL[data/yeisme-prompt-templates<br/>3d 模板编译产物] -. 执行映射文档 .-> DSH
 ```
 
+## 生态核实（2026-09-12，gh search repos）
+
+- Blender：`ahujasid/blender-mcp` 28.3k stars / 2.6k forks / 2026-09-07 活跃，第二名仅 299 stars，确认为绝对事实标准。两个活跃差异化 fork 留作工具面扩展参考：`seehiong/blender-mcp-bridge`（93 工具）、`sandraschi/blender-mcp`（headless FastMCP，41 个组合工具）。
+- UE（二期）：候选修正为 `ChiR24/Unreal_mcp`（866 stars，2026-09-11 活跃）；原首选 `chongdashu/unreal-mcp`（2077 stars）2025-04 后停更，仅作协议参考。二期立项时重新核实。
+
+## Gateway 对接与用户体验
+
+### registry 片段（脚本生成、脱敏）
+
+```yaml
+servers:
+  blender:
+    enabled: true
+    transport: stdio
+    command: uvx
+    args: ["blender-mcp"]
+    gateway:
+      enabled: true
+      namespace: blender
+      exposeTools: [get_scene_info, get_object_info, get_viewport_screenshot, search_polyhaven_assets, download_polyhaven_asset, set_texture]  # read + 白名单 write；generate/exec 不在列
+```
+
+### First-run 用户旅程（7 步）
+
+1. 安装 Blender（用户自装，文档给出受支持版本核对命令）。
+2. `uvx blender-mcp` 可启动（`uv` 缺失时文档给出安装命令）。
+3. Blender 内安装 addon 并点 Connect（上游既有流程，fork 文档本地化 + 截图）。
+4. `mcp-gateway quickstart` 生成个人配置（不覆盖已有文件）。
+5. 追加 blender server 片段（脚本生成，可粘贴）→ `mcp-gateway validate --registry ~/.mcp-gateway/registry.yaml`。
+6. `mcp-gateway serve` 启动；`mcp-gateway status` 看到 blender namespace。
+7. agent/DSH 接入：`mcp-gateway client config` 渲染客户端配置，`mcp-gateway client doctor` 检查就绪，`mcp-gateway client smoke` 协议冒烟。
+
+### 连接状态模型与用户可见文案
+
+| 状态 | 判定 | 用户看到 | 恢复动作 |
+| --- | --- | --- | --- |
+| not_configured | registry 无 blender 条目 | 「未配置 Blender 接入」+ 配置片段指引 | 走 first-run 4–5 |
+| server_unreachable | stdio 拉起失败 | 「server 未就绪」+ `mcp-gateway diagnose blender` | 检查 uvx/安装 |
+| addon_disconnected | server 在、socket 不通 | 「请在 Blender 中启动 addon 连接」（含菜单位置） | Blender 内 Connect |
+| ready | read 工具往返成功 | 工具可用 | — |
+| degraded | 部分资产源凭据缺失 | 对应 generate/download 入口禁用 + 原因 | 用户自配凭据 |
+
+原则：每态只禁相关 mutation，诚实降级，不出现死按钮；DSH pane 只消费这些状态的 safe projection。
+
+### 审批与费用 UX
+
+- write 级（下载资产、改材质）：Gateway 审批一次一果，receipt 可查（`mcp-gateway approvals`）。
+- generate 级（文生/图生 3D）：首次使用显式说明「将调用外部 provider 并产生费用」，用户确认 + 凭据就绪后才出现在工具面；审批文案含 provider 名与预计产物类型，不含凭据。
+- exec 级：不出现在任何 profile；本地直连使用时由用户自行承担，文档明确风险。
+
+### 诊断路径
+
+`mcp-gateway diagnose blender`（后端诊断）→ `mcp-gateway doctor`（客户端就绪）→ `mcp-gateway tools`（工具面核对，比对分级表）。DSH 侧 `ui-mcp-inspector` 自动可见会话内 blender 工具活动。
+
 ## 工具分级（上游 27 个工具）
 
 | 级别 | 工具 | Gateway 默认 |
