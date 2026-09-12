@@ -31,6 +31,8 @@
 ```bash
 uv sync
 uv run pytest
+uv run python scripts/verify_tool_classification.py        # 分级表 vs server 实际工具
+uv run python scripts/generate_gateway_registry_example.py --check   # 示例与分级表同步
 uv run ruff check src tests 2>/dev/null || true   # 上游未配 lint 时不强制
 ```
 

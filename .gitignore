@@ -20,7 +20,8 @@ local_tests/
 
 supabase/
 
-scripts/
+scripts/*
+!scripts/*.py
 
 # Yeisme fork additions
 .agents/
