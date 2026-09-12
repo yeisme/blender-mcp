@@ -21,3 +21,9 @@ local_tests/
 supabase/
 
 scripts/
+
+# Yeisme fork additions
+.agents/
+.claude/
+.skill-sync.*/
+temp/
